@@ -513,8 +513,14 @@ class TICC1101(object):
 
             return False
 
-        self._usDelay(5000)
-        #time.sleep(1)
+        remaining_bytes = self._readSingleByte(self.TXBYTES) & 0x7F
+        while remaining_bytes != 0:
+            self._usDelay(1000)
+            remaining_bytes = self._readSingleByte(self.TXBYTES) & 0x7F
+            if self.debug:
+                print "Waiting until all bytes are transmited, remaining bytes: %d" % remaining_bytes
+
+
         if (self._readSingleByte(self.TXBYTES) & 0x7F) == 0:
             if self.debug:
                 print "Packet sent!"
