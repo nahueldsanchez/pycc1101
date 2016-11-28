@@ -330,7 +330,16 @@ class TICC1101(object):
         self._writeSingleByte(self.TEST0, 0x09)
         self._writeSingleByte(0x3E, 0xC0)           # Power 10dBm
 
-        return
+    def setSyncMode(self, syncmode):
+        regVal = list(self.getRegisterConfiguration("MDMCFG2"))
+
+        if syncmode > 7:
+            raise Exception("Invalid SYNC mode")
+
+        regVal[5:] = bin(syncmode)[2:].zfill(3)
+
+        regVal = int("".join(regVal), 2)
+        self._writeSingleByte(self.MDMCFG2, regVal)
 
     def setModulation(self, modulation):
         regVal = list(self.getRegisterConfiguration("MDMCFG2"))
