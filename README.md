@@ -8,7 +8,7 @@ I developed this module for learning purposes and included two simple examples f
 ### Steps to make it work ###
 
 1. Clone this repository
-2. virutalenv pycc1101
+2. virtualenv pycc1101
 3. Activate the virtualenv
 4. pip install spidev
 5. python tx.py
