@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from pycc1101.pycc1101 import TICC1101
 from struct import pack
 import binascii
