@@ -116,8 +116,7 @@ class TICC1101(object):
             self._spi.max_speed_hz = speed
 
         except Exception as e:
-
-            print e
+            print(e)
 
     def _usDelay(self, useconds):
         time.sleep(useconds / 1000000.0)
@@ -139,7 +138,7 @@ class TICC1101(object):
         ret = self._spi.xfer(buff)[1:]
 
         if self.debug:
-            print "_readBurst | start_address = %x, length = %x" % (start_address, length)
+            print("_readBurst | start_address = {:x}, length = {:x}".format(start_address, length))
 
         return ret
 
@@ -167,9 +166,9 @@ class TICC1101(object):
         assert component_version == 0x14
 
         if self.debug:
-            print "Part Number: %x" % part_number
-            print "Component Version: %x" % component_version
-            print "Self test OK"
+            print("Part Number: {:x}".format(part_number))
+            print("Component Version: {:x}".format(component_version))
+            print("Self test OK")
 
     def sidle(self):
         self._strobe(self.SIDLE)
@@ -190,9 +189,12 @@ class TICC1101(object):
             self._writeSingleByte(self.FREQ2, 0x10)
             self._writeSingleByte(self.FREQ1, 0xA7)
             self._writeSingleByte(self.FREQ0, 0x62)
-
+        elif freq == 868:
+            self._writeSingleByte(self.FREQ2, 0x21)
+            self._writeSingleByte(self.FREQ1, 0x62)
+            self._writeSingleByte(self.FREQ0, 0x76)
         else:
-            raise Exception("Only 433MHz is currently supported")
+            raise Exception("Only 433MHz and 868MHz are currently supported")
 
     def setChannel(self, channel=0x00):
         self._writeSingleByte(self.CHANNR, channel)
@@ -211,67 +213,67 @@ class TICC1101(object):
             bits = toBits(self._readSingleByte(self.PKTCTRL1))
 
             if showConfig:
-                print "PKTCTRL1"
-                print "PQT[7:5] = %s" % bits[:3]
-                print "CRC_AUTOFLUSH = %s" % bits[4]
-                print "APPEND_STATUS = %s" % bits[5]
-                print "ADR_CHK[1:0] = %s" % bits[6:]
+                print("PKTCTRL1")
+                print("PQT[7:5] = {}".format(bits[:3]))
+                print("CRC_AUTOFLUSH = {}".format(bits[4]))
+                print("APPEND_STATUS = {}".format(bits[5]))
+                print("ADR_CHK[1:0] = {}".format(bits[6:]))
 
         elif register == "PKTCTRL0":
             bits = toBits(self._readSingleByte(self.PKTCTRL0))
 
             if showConfig:
-                print "PKTCTRL0"
-                print "WHITE_DATA = %s" % bits[1]
-                print "PKT_FORMAT[1:0] = %s" % bits[2:4]
-                print "CRC_EN = %s" % bits[5]
-                print "LENGTH_CONFIG[1:0] = %s" % bits[6:]
+                print("PKTCTRL0")
+                print("WHITE_DATA = {}".format(bits[1]))
+                print("PKT_FORMAT[1:0] = {}".format(bits[2:4]))
+                print("CRC_EN = {}".format(bits[5]))
+                print("LENGTH_CONFIG[1:0] = {}".format(bits[6:]))
 
         elif register == "ADDR":
             bits = toBits(self._readSingleByte(self.ADDR))
 
             if showConfig:
-                print "ADDR"
-                print "DEVICE_ADDR = %s" % bits
+                print("ADDR")
+                print("DEVICE_ADDR = {}".format(bits))
 
         elif register == "CHANNR":
             bits = toBits(self._readSingleByte(self.CHANNR))
 
             if showConfig:
-                print "CAHNNR"
-                print "CHAN = %s" % bits
+                print("CAHNNR")
+                print("CHAN = {}".format(bits))
 
         elif register == "PKTSTATUS":
             bits = toBits(self._readSingleByte(self.CHANNR))
 
             if showConfig:
-                print "PKTSTATUS"
-                print "CRC_OK = %s" % bits[0]
-                print "CS = %s" % bits[1]
-                print "PQT_REACHED = %s" % bits[2]
-                print "CCA = %s" % bits[3]
-                print "SFD = %s" % bits[4]
-                print "GDO2 = %s" % bits[5]
-                print "GDO0 = %s" % bits[7]
+                print("PKTSTATUS")
+                print("CRC_OK = {}".format(bits[0]))
+                print("CS = {}".format(bits[1]))
+                print("PQT_REACHED = {}".format(bits[2]))
+                print("CCA = {}".format(bits[3]))
+                print("SFD = {}".format(bits[4]))
+                print("GDO2 = {}".format(bits[5]))
+                print("GDO0 = {}".format(bits[7]))
 
         elif register == "MDMCFG2":
             bits = toBits(self._readSingleByte(self.MDMCFG2))
 
             if showConfig:
-                print "MDMCFG2"
-                print "DEM_DCFILT_OFF = %s" % bits[0]
-                print "MOD_FORMAT = %s" % bits[1:4]
-                print "MANCHESTER_EN = %s" % bits[4]
-                print "SYNC_MODE = %s" % bits[5:]
+                print("MDMCFG2")
+                print("DEM_DCFILT_OFF = {}".format(bits[0]))
+                print("MOD_FORMAT = {}".format(bits[1:4]))
+                print("MANCHESTER_EN = {}".format(bits[4]))
+                print("SYNC_MODE = {}".format(bits[5:]))
 
         elif register == "MDMCFG1":
             bits = toBits(self._readSingleByte(self.MDMCFG1))
 
             if showConfig:
-                print "MDMCFG1"
-                print "FEC_EN = %s" % bits[0]
-                print "NUM_PREAMBLE = %s" % bits[1:4]
-                print "CHANSPC_E = %s" % bits[6:]
+                print("MDMCFG1")
+                print("FEC_EN = {}".format(bits[0]))
+                print("NUM_PREAMBLE = {}".format(bits[1:4]))
+                print("CHANSPC_E = {}".format(bits[6:]))
 
         return bits
 
@@ -388,7 +390,7 @@ class TICC1101(object):
 
     def _getMRStateMachineState(self):
         # The &0x1F works as a mask due to the fact
-        # that the MARCSTATE register only uses the 
+        # that the MARCSTATE register only uses the
         # first 5 bits
         return (self._readSingleByte(self.MARCSTATE) & 0x1F)
 
@@ -456,8 +458,8 @@ class TICC1101(object):
 
         while ((marcstate & 0x1F) != 0x0D):
             if self.debug:
-                print "marcstate = %x" % marcstate
-                print "waiting for marcstate == 0x0D"
+                print("marcstate = %x".format(marcstate))
+                print("waiting for marcstate == 0x0D")
 
             if marcstate == 0x11:
                 self._flushRXFifo()
@@ -466,7 +468,7 @@ class TICC1101(object):
 
         if len(dataBytes) == 0:
             if self.debug:
-                print "sendData | No data to send"
+                print("sendData | No data to send")
             return False
 
         sending_mode = self.getPacketConfigurationMode()
@@ -475,7 +477,7 @@ class TICC1101(object):
         if sending_mode == "PKT_LEN_FIXED":
             if data_len > self._readSingleByte(self.PKTLEN):
                 if self.debug:
-                    print "Len of data exceeds the configured packet len"
+                    print("Len of data exceeds the configured packet len")
                 return False
 
             if self.getRegisterConfiguration("PKTCTRL1", False)[6:] != "00":
@@ -485,8 +487,8 @@ class TICC1101(object):
             dataToSend.extend([0] * (self._readSingleByte(self.PKTLEN) - len(dataToSend)))
 
             if self.debug:
-                print "Sending a fixed len packet"
-                print "data len = %d" % (data_len)
+                print("Sending a fixed len packet")
+                print("data len = %d".format((data_len)))
 
         elif sending_mode == "PKT_LEN_VARIABLE":
             dataToSend.append(data_len)
@@ -498,14 +500,14 @@ class TICC1101(object):
             dataToSend.extend(dataBytes)
 
             if self.debug:
-                print "Sending a variable len packet"
-                print "Length of the packet is: %d" % data_len
+                print("Sending a variable len packet")
+                print("Length of the packet is: %d".format(data_len))
 
         elif sending_mode == "PKT_LEN_INFINITE":
             # ToDo
             raise Exception("MODE NOT IMPLEMENTED")
 
-        print dataToSend
+        print("{}".format(dataToSend))
         self._writeBurst(self.TXFIFO, dataToSend)
         self._usDelay(2000)
         self._setTXState()
@@ -517,8 +519,8 @@ class TICC1101(object):
             self._setRXState()
 
             if self.debug:
-                print "senData | FAIL"
-                print "sendData | MARCSTATE: %x" % self._readSingleByte(self.MARCSTATE)
+                print("senData | FAIL")
+                print("sendData | MARCSTATE: %x".format(self._readSingleByte(self.MARCSTATE)))
 
             return False
 
@@ -527,19 +529,19 @@ class TICC1101(object):
             self._usDelay(1000)
             remaining_bytes = self._readSingleByte(self.TXBYTES) & 0x7F
             if self.debug:
-                print "Waiting until all bytes are transmited, remaining bytes: %d" % remaining_bytes
+                print("Waiting until all bytes are transmited, remaining bytes: %d".format(remaining_bytes))
 
 
         if (self._readSingleByte(self.TXBYTES) & 0x7F) == 0:
             if self.debug:
-                print "Packet sent!"
+                print("Packet sent!")
 
             return True
 
         else:
             if self.debug:
-                print self._readSingleByte(self.TXBYTES) & 0x7F
-                print "sendData | MARCSTATE: %x" % self._getMRStateMachineState()
+                print("{}".format(self._readSingleByte(self.TXBYTES) & 0x7F))
+                print("sendData | MARCSTATE: %x".format(self._getMRStateMachineState()))
                 self.sidle()
                 self._flushTXFifo()
                 time.sleep(5)
@@ -563,13 +565,13 @@ class TICC1101(object):
 
                 if data_len > max_len:
                     if self.debug:
-                        print "Len of data exceeds the configured maximum packet len"
+                        print("Len of data exceeds the configured maximum packet len")
                     return False
 
                 if self.debug:
-                    print "Receiving a variable len packet"
-                    print "max len: %d" % max_len
-                    print "Packet length: %d" % data_len
+                    print("Receiving a variable len packet")
+                    print("max len: %d".format(max_len))
+                    print("Packet length: %d".format(data_len))
 
             elif sending_mode == "PKT_LEN_INFINITE":
                 # ToDo
@@ -587,12 +589,12 @@ class TICC1101(object):
                 lqi = val & 0x7f
 
             if self.debug and valPktCtrl1[5] == "1":
-                print "Packet information is enabled"
-                print "RSSI: %d" % (rssi)
-                print "VAL: %d" % (val)
-                print "LQI: %d" % (lqi)
+                print("Packet information is enabled")
+                print("RSSI: %d".format((rssi)))
+                print("VAL: %d".format((val)))
+                print("LQI: %d".format((lqi)))
 
-            print "Data: " + str(data)
+            print("Data: ") + str(data)
 
             self._flushRXFifo()
             return data
