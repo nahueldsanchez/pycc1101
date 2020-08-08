@@ -10,13 +10,9 @@ I developed this module for learning purposes and included two examples for rx a
 ### Steps to make it work: ###
 
 1. Clone this repository
-2. Create a virtual environment by running:
-    `virtualenv pycc1101` 
+2. Create a virtual environment by running `virtualenv pycc1101` 
 3. Activate the virtualenv
-4. Install spidev package:  
-    `pip install spidev`
-5. Run 
-    `python tx.py`
+4. Install spidev package: `pip install spidev`
+5. Run `python tx.py`
 6. Repeat steps 1-4 in another machine with the module connected.
-7. Run 
-    `python rx.py`
+7. Run `python rx.py`
