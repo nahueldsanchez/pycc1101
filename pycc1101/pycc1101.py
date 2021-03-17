@@ -183,18 +183,15 @@ class TICC1101(object):
         self.sidle()
         self._strobe(self.SPWD)
 
+    @staticmethod
+    def _computeFrequencyControlWords(freq_mhz: float) -> tuple:
+        return tuple(int(freq_mhz * 2520.6155).to_bytes(length=3, byteorder="big"))
+
     def setCarrierFrequency(self, freq=433):
-        # Register values extracted from SmartRF Studio 7
-        if freq == 433:
-            self._writeSingleByte(self.FREQ2, 0x10)
-            self._writeSingleByte(self.FREQ1, 0xA7)
-            self._writeSingleByte(self.FREQ0, 0x62)
-        elif freq == 868:
-            self._writeSingleByte(self.FREQ2, 0x21)
-            self._writeSingleByte(self.FREQ1, 0x62)
-            self._writeSingleByte(self.FREQ0, 0x76)
-        else:
-            raise Exception("Only 433MHz and 868MHz are currently supported")
+        freq2, freq1, freq0 = self._computeFrequencyControlWords(freq)
+        self._writeSingleByte(self.FREQ2, freq2)
+        self._writeSingleByte(self.FREQ1, freq1)
+        self._writeSingleByte(self.FREQ0, freq0)
 
     def setChannel(self, channel=0x00):
         self._writeSingleByte(self.CHANNR, channel)
