@@ -2,7 +2,6 @@
 
 from pycc1101.pycc1101 import TICC1101
 from struct import pack
-import binascii
 import time
 
 ticc1101 = TICC1101()
@@ -18,7 +17,6 @@ count = 0
 
 while True:
     data = pack('<I', count)
-    toSend = [int(binascii.hexlify(x),16) for x in data]
-    ticc1101.sendData(toSend)
+    ticc1101.sendData(list(data))
     count += 1
     time.sleep(1)
